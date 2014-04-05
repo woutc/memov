@@ -1,4 +1,4 @@
-DOWNLOAD_DIR = "/home/wout/share/Downloads"
+DOWNLOAD_DIR = ""
 TV_SHOW_DIR = ""
 MOVIE_DIR = ""
 EXTENSIONS = ["avi", "mp4", "iso", "mkv", "m4v", "sub", "srt"]

@@ -9,7 +9,7 @@ files that look like movies or tv shows.  The files will then be
 renamed and moved to the respective video directory. After all files
 are moved/renamed.
 
-** This script is VERY heavily based on https://github.com/dralthiace/sort-shows.pl**
+**This script is VERY heavily based on https://github.com/dralthiace/sort-shows.pl**
 All credits to him for the inital idea and making it work in perl.
 
 Details
@@ -21,6 +21,8 @@ the setup for the script work correctly.
 Have a look at the variables and add values if needed.
 
 ###TESTING
+[![Build Status](https://travis-ci.org/woutc/memov.svg?branch=master)](https://travis-ci.org/woutc/memov)
+
 There are unit tests for the script located in the `tests`folder.
 To run the unit tests, execute the following:
     `python -m tests.memov_test`
