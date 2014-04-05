@@ -1,0 +1,4 @@
+language: python
+python: 2.7
+script: time python -m tests.memov_test 
+
