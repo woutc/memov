@@ -19,58 +19,53 @@ class MemovMock(Memov):
 
 class MemovTest(unittest.TestCase):
     def setUp(self):
-        self.memov = Memov()
+        self.memov_mock = MemovMock()
 
     def testMovieAviXvid(self):
-        self.assertTrue(self.memov.isMovie("Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi"))
+        self.memov_mock.move("/Downloads/", "Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi") 
+        self.assertEqual(self.memov_mock.new_file, "/movies/Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi")   
         
     def testMovieDvdMinusRip(self):
-        self.assertTrue(self.memov.isMovie("Marilyn Manson - Guns, God and Government World Tour - DVD-rip 480x272 PSP - NLizer.mp4"))
+        self.memov_mock.move("/Downloads/", "Marilyn Manson - Guns, God and Government World Tour - DVD-rip 480x272 PSP - NLizer.mp4") 
+        self.assertEqual(self.memov_mock.new_file, "/movies/Marilyn Manson - Guns, God and Government World Tour - DVD-rip 480x272 PSP - NLizer.mp4")       
         
     def testMovie720p(self):
-        self.assertTrue(self.memov.isMovie("lion king 720p - zeberzee.mp4"))        
+        self.memov_mock.move("/Downloads/", "lion king 720p - zeberzee.mp4") 
+        self.assertEqual(self.memov_mock.new_file, "/movies/lion king 720p - zeberzee.mp4")     
         
     def testMoviePartlyDownloaded(self):
-        self.assertFalse(self.memov.isMovie("Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi.part"))           
+        self.memov_mock.move("/Downloads/", "Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi.part") 
+        self.assertEqual(self.memov_mock.new_file, "")            
                 
     def testTvShowSmallCaseSerie(self):
-        self.assertTrue(self.memov.isTvShow("Family.Guy.s12e14.HDTV.x264-2HD.mp4"))
+        self.memov_mock.move("/Downloads/", "Family.Guy.s12e14.HDTV.x264-2HD.mp4") 
+        self.assertEqual(self.memov_mock.new_file, "/shows/Family Guy/Family Guy - Season 12/Family.Guy.S12E14.HDTV.x264-2HD.mp4")
         
     def testTvShowOnlyEpisodeInfo(self):
-        self.assertTrue(self.memov.isTvShow("Family Guy s12 e14.mp4"))      
+        self.memov_mock.move("/Downloads/", "Family Guy s8 e14.mp4") 
+        self.assertEqual(self.memov_mock.new_file, "/shows/Family Guy/Family Guy - Season 08/Family.Guy.S08E14.mp4")
         
-    @unittest.skip("To be implemented")    #greys.anatomy.1018.hdtv-lol.mp4
-    def testTvShowLittleEpisodeInfo(self):
-        self.assertTrue(self.memov.isTvShow("revenge.307.hdtv-lol.mp4"))       
+    def testTvShowSpaceAfterEpisodeInfo(self):
+        self.memov_mock.move("/Downloads/", "The.Simpsons.S25E14- HDTV.x264-LOL.mp4") 
+        self.assertEqual(self.memov_mock.new_file, "/shows/The Simpsons/The Simpsons - Season 25/The.Simpsons.S25E14.HDTV.x264-LOL.mp4")        
+        
+    @unittest.skip("To be implemented")
+    def testTvShowLittleEpisodeInfoSeason3(self):
+        self.memov_mock.move("/Downloads/", "revenge.307.hdtv-lol.mp4") 
+        self.assertEqual(self.memov_mock.new_file, "/shows/Revenge/Revenge - Season 03/Revenge.S03E07.hdtv-lol.mp4")  
+    
+    @unittest.skip("To be implemented")    
+    def testTvShowLittleEpisodeInfoSeason10(self):
+        self.memov_mock.move("/Downloads/", "greys.anatomy.1018.hdtv-lol.mp4") 
+        self.assertEqual(self.memov_mock.new_file, "/shows/Greys Anatomy/Greys Anatomy - Season 10/Greys.Anatomy.S10E18.hdtv-lol.mp4")           
     
     def testTvShowPartlyDownloaded(self):
-        self.assertFalse(self.memov.isTvShow("Revenge.S03E10.HDTV.x264-LOL.mp4.part"))              
-
-    def testCleanUpTvShowFileName(self):
-        self.assertEqual(self.memov.cleanUpTvShowFilename(["The.Simpsons", "25", "4", ".HDTV.x264-LOL.mp4"]), ['The Simpsons', '25', '04', '.HDTV.x264-LOL.mp4'])
-        
-    def testCleanUpTvShowFileNameWithSpace(self):
-        self.assertEqual(self.memov.cleanUpTvShowFilename(["The.Simpsons", "25", "4", "- title.mp4"]), ['The Simpsons', '25', '04', 'title.mp4'])               
-                
-    def testTransformTvShowFileName(self):
-        self.assertEqual(self.memov.transformTvShowFilename(["The Simpsons", "25", "14", ".HDTV.x264-LOL.mp4"]), "The.Simpsons.S25E14.HDTV.x264-LOL.mp4")          
-  
-    def testExtractTvShowDir(self):
-        self.assertEqual(self.memov.extractTvShowDir(['The Simpsons', '25', '14', '.HDTV.x264-LOL.mp4']), ["The Simpsons", "The Simpsons - Season 25"])     
-        
-    def testMoveTvShow(self):
-        memov_mock = MemovMock()
-        memov_mock.move("/Downloads/", "Family.Guy.s12e14.HDTV.x264-2HD.mp4")
-        self.assertEqual(memov_mock.new_file, "/shows/Family Guy/Family Guy - Season 12/Family.Guy.S12E14.HDTV.x264-2HD.mp4")  
-        
-    def testMoveMovie(self):
-        memov_mock = MemovMock()
-        memov_mock.move("/Downloads/", "Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi") 
-        self.assertEqual(memov_mock.new_file, "/movies/Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi")               
+        self.memov_mock.move("/Downloads/", "Revenge.S03E10.HDTV.x264-LOL.mp4.part") 
+        self.assertEqual(self.memov_mock.new_file, "")                      
                 
     def testConfigList(self):
         config = ["a", "b", "c"]
-        result = self.memov._createConfigList(config)
+        result = self.memov_mock._createConfigList(config)
         self.assertEqual(result, "a|b|c")              
 
 if __name__ == '__main__':

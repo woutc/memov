@@ -28,7 +28,7 @@ class Memov:
         matched_filename[0] = string.capwords(matched_filename[0])
         matched_filename[1] = "%02d" % int(matched_filename[1])
         matched_filename[2] = "%02d" % int(matched_filename[2])
-        matched_filename[3] = re.sub(r"^- ", r"", matched_filename[3])
+        matched_filename[3] = re.sub(r"^- ", r".", matched_filename[3])
         return matched_filename
 
     def transformTvShowFilename(self, matched_filename):
@@ -49,8 +49,6 @@ class Memov:
         elif self.isMovie(file_name):
             full_path = os.path.join(config.MOVIE_DIR, file_name)
             self.moveFile(orig_file, full_path)
-        else:
-            print file_name + "[unknown]"
             
     def moveTvShow(self, orig_file, tv_show_dir, tv_show_title):
         directory = os.path.join(config.TV_SHOW_DIR, tv_show_dir[0], tv_show_dir[1])
