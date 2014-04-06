@@ -10,7 +10,7 @@ renamed and moved to the respective video directory. After all files
 are moved/renamed.
 
 **This script is VERY heavily based on https://github.com/dralthiace/sort-shows.pl**
-All credits to him for the inital idea and making it work in perl.
+All credits to him for the initial idea and making it work in perl.
 
 Details
 -------

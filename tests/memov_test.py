@@ -39,7 +39,7 @@ class MemovTest(unittest.TestCase):
     def testTvShowOnlyEpisodeInfo(self):
         self.assertTrue(self.memov.isTvShow("Family Guy s12 e14.mp4"))      
         
-    @unittest.skip("To be implemented")    
+    @unittest.skip("To be implemented")    #greys.anatomy.1018.hdtv-lol.mp4
     def testTvShowLittleEpisodeInfo(self):
         self.assertTrue(self.memov.isTvShow("revenge.307.hdtv-lol.mp4"))       
     

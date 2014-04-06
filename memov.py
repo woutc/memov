@@ -4,6 +4,7 @@ import os
 import re
 import string
 import shutil
+import errno
 import config
 
 
@@ -57,11 +58,12 @@ class Memov:
         self.moveFile(orig_file, os.path.join(directory, tv_show_title))
         
     def moveFile(self, orig_file, new_file):
+        print "Moving file: " + orig_file + " to " + new_file
         shutil.move(orig_file, new_file)
 
     def createTvShowDir(self, tv_show_dir):
         try:
-            os.makedirs(directory)
+            os.makedirs(tv_show_dir)
         except OSError, e: 
             if e.errno != errno.EEXIST: 
                 raise      
