@@ -43,7 +43,7 @@ class MemovTest(unittest.TestCase):
         
     def testTvShowOnlyEpisodeInfo(self):
         self.memov_mock.move("/Downloads/", "Family Guy s8 e14.mp4") 
-        self.assertEqual(self.memov_mock.new_file, "/shows/Family Guy/Family Guy - Season 08/Family.Guy.S08E14.mp4")
+        self.assertEqual(self.memov_mock.new_file, "/shows/Family Guy/Family Guy - Season 8/Family.Guy.S08E14.mp4")
         
     def testTvShowSpaceAfterEpisodeInfo(self):
         self.memov_mock.move("/Downloads/", "The.Simpsons.S25E14- HDTV.x264-LOL.mp4") 
@@ -52,7 +52,7 @@ class MemovTest(unittest.TestCase):
     @unittest.skip("To be implemented")
     def testTvShowLittleEpisodeInfoSeason3(self):
         self.memov_mock.move("/Downloads/", "revenge.307.hdtv-lol.mp4") 
-        self.assertEqual(self.memov_mock.new_file, "/shows/Revenge/Revenge - Season 03/Revenge.S03E07.hdtv-lol.mp4")  
+        self.assertEqual(self.memov_mock.new_file, "/shows/Revenge/Revenge - Season 3/Revenge.S03E07.hdtv-lol.mp4")  
     
     @unittest.skip("To be implemented")    
     def testTvShowLittleEpisodeInfoSeason10(self):

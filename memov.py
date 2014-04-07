@@ -26,6 +26,7 @@ class Memov:
     def cleanUpTvShowFilename(self, matched_filename):
         matched_filename[0] = re.sub(r"[-._]", r" ", matched_filename[0].lower())
         matched_filename[0] = string.capwords(matched_filename[0])
+        matched_filename.append(str(int(matched_filename[1])))
         matched_filename[1] = "%02d" % int(matched_filename[1])
         matched_filename[2] = "%02d" % int(matched_filename[2])
         matched_filename[3] = re.sub(r"^- ", r".", matched_filename[3])
@@ -35,7 +36,7 @@ class Memov:
         return matched_filename[0].replace(" ", ".") + ".S" + matched_filename[1] + "E" + matched_filename[2] + matched_filename[3]
 
     def extractTvShowDir(self, matched_filename):
-        return [matched_filename[0], matched_filename[0] + " - Season " + matched_filename[1]]
+        return [matched_filename[0], matched_filename[0] + " - Season " + matched_filename[4]]
 
     def move(self, dir, file_name):
         orig_file = os.path.join(dir, file_name)
