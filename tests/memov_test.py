@@ -47,7 +47,11 @@ class MemovTest(unittest.TestCase):
         
     def testTvShowSpaceAfterEpisodeInfo(self):
         self.memov_mock.move("/Downloads/", "The.Simpsons.S25E14- HDTV.x264-LOL.mp4") 
-        self.assertEqual(self.memov_mock.new_file, "/shows/The Simpsons/The Simpsons - Season 25/The.Simpsons.S25E14.HDTV.x264-LOL.mp4")        
+        self.assertEqual(self.memov_mock.new_file, "/shows/The Simpsons/The Simpsons - Season 25/The.Simpsons.S25E14.HDTV.x264-LOL.mp4")
+        
+    def testTvShowDoubleEpisode(self):
+        self.memov_mock.move("/Downloads/", "Drop.Dead.Diva.S06E01-E02.HDTV.x264-2HD.mp4") 
+        self.assertEqual(self.memov_mock.new_file, "/shows/Drop Dead Diva/Drop Dead Diva - Season 6/Drop.Dead.Diva.S06E01-E02.HDTV.x264-2HD.mp4")        
         
     @unittest.skip("To be implemented")
     def testTvShowLittleEpisodeInfoSeason3(self):
