@@ -1,5 +1,5 @@
 nguage: python
 python: 2.7
 install: sudo pip install -r requirements.txt 
-script: coverage run -m tests.memov_test 
+script: coverage run memov_test.py 
 after_success: coveralls
