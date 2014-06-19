@@ -21,7 +21,7 @@ the setup for the script work correctly.
 Have a look at the variables and add values if needed.
 
 ###TESTING
-[![Build Status](https://travis-ci.org/woutc/memov.svg?branch=master)](https://travis-ci.org/woutc/memov)
+[![Build Status](https://travis-ci.org/woutc/memov.svg?branch=master)](https://travis-ci.org/woutc/memov) [![Coverage Status](https://coveralls.io/repos/woutc/memov/badge.png?branch=master)](https://coveralls.io/r/woutc/memov?branch=master)
 
 There are unit tests for the script located in the `tests`folder.
 To run the unit tests, execute the following:
