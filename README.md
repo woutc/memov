@@ -25,7 +25,7 @@ Have a look at the variables and add values if needed.
 
 There are unit tests for the script located in the `tests`folder.
 To run the unit tests, execute the following:
-    `python -m tests.memov_test`
+    `python memov_test.py`
 
 ###IDENTIFICATION
 
