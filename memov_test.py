@@ -1,6 +1,8 @@
 import unittest
 from memov import Memov
 import config
+import os
+import shutil
 
 class MemovMock(Memov):
     def __init__(self):
@@ -15,7 +17,14 @@ class MemovMock(Memov):
         
     def moveFile(self, orig_file, new_file):
         self.orig_file = orig_file
-        self.new_file = new_file           
+        self.new_file = new_file 
+        
+class MemovFilesActivatedMock(Memov):
+    def __init__(self):
+        config.MOVIE_DIR = "test/Movies"
+        config.TV_SHOW_DIR = "test/Shows"
+        config.XBMC_HOST = ''
+        Memov.__init__(self)                   
 
 class MemovTest(unittest.TestCase):
     def setUp(self):
@@ -70,8 +79,19 @@ class MemovTest(unittest.TestCase):
     def testConfigList(self):
         config = ["a", "b", "c"]
         result = self.memov_mock._createConfigList(config)
-        self.assertEqual(result, "a|b|c")              
+        self.assertEqual(result, "a|b|c")    
+        
+    def testFileAndDirectoryHandling(self):
+        os.makedirs('test/Download')
+        os.makedirs('test/Movies')
+        open('test/Download/Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi', 'a').close()    
 
+        memov = MemovFilesActivatedMock()
+        memov.run('test/Download')
+        self.assertTrue(os.path.isfile('test/Movies/Nymphomaniac 2013 Volume II UNRATED WEBRip XviD MP3-RARBG.avi'))    
+        
+        shutil.rmtree('test/')
+                                  
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(MemovTest)
     unittest.TextTestRunner(verbosity=2).run(suite)

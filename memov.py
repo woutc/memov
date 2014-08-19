@@ -5,7 +5,9 @@ import re
 import string
 import shutil
 import errno
+import urllib2
 import config
+import json
 
 
 class Memov:
@@ -14,6 +16,7 @@ class Memov:
         movie_indicators = self._createConfigList(config.MOVIE_INDICATORS)
         self.tv_pattern = re.compile("([-._ \w]+)[-._ ]S(\d{1,2}).?E(\d{1,2})([^\/]*\.(?:" + extensions + ")$)", re.IGNORECASE)
         self.movie_pattern = re.compile("(?:" + movie_indicators + ")(.*)\.(?:" + extensions + ")$", re.IGNORECASE)
+        self.fileMoved = False
 
     def isMovie(self, filename):
         result = self.movie_pattern.search(filename)
@@ -59,6 +62,7 @@ class Memov:
     def moveFile(self, orig_file, new_file):
         print "Moving file: " + orig_file + " to " + new_file
         shutil.move(orig_file, new_file)
+        self.fileMoved = True
 
     def createTvShowDir(self, tv_show_dir):
         try:
@@ -69,6 +73,8 @@ class Memov:
 
     def run(self, downloaddir):
         self.walkdir(downloaddir)
+        if self.fileMoved:
+            self.updateLibrary()
 
     def walkdir(self, dir):
         for root, subFolders, files in os.walk(dir):
@@ -82,6 +88,17 @@ class Memov:
         for item in list_:
             result += item + "|"
         return result.rstrip("|")
+        
+    def updateLibrary(self):
+        if config.XBMC_HOST == '':
+            return
+        print "Updating XBMC library"
+        url = 'http://' + config.XBMC_HOST
+        payload = {'jsonrpc':'2.0','method':'VideoLibrary.Scan'}
+        request = urllib2.Request(url, json.dumps(payload), {'Content-Type': 'application/json'})
+        stream = urllib2.urlopen(request)
+        stream.read()
+        stream.close()
 
 if __name__ == '__main__':
     Memov().run(config.DOWNLOAD_DIR)
