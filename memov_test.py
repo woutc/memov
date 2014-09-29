@@ -75,6 +75,10 @@ class MemovTest(unittest.TestCase):
     def testTvShowPartlyDownloaded(self):
         self.memov_mock.move("/Downloads/", "Revenge.S03E10.HDTV.x264-LOL.mp4.part") 
         self.assertEqual(self.memov_mock.new_file, "")                      
+
+    def testTvShowS00Ep00(self):
+        self.memov_mock.move("/Downloads/", "Breaking Bad s02ep7 720p brrip.sujaidr.mkv")
+        self.assertEqual(self.memov_mock.new_file, "/shows/Breaking Bad/Breaking Bad - Season 2/Breaking.Bad.S02E07 720p brrip.sujaidr.mkv")
                 
     def testConfigList(self):
         config = ["a", "b", "c"]
