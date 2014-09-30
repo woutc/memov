@@ -14,7 +14,7 @@ class Memov:
     def __init__(self):
         extensions = self._createConfigList(config.EXTENSIONS)
         movie_indicators = self._createConfigList(config.MOVIE_INDICATORS)
-        self.tv_pattern = re.compile("([-._ \w]+)[-._ ]S(\d{1,2}).?E(\d{1,2})([^\/]*\.(?:" + extensions + ")$)", re.IGNORECASE)
+        self.tv_pattern = re.compile("([-._ \w]+)[-._ ]S(\d{1,2}).?Ep?(\d{1,2})([^\/]*\.(?:" + extensions + ")$)", re.IGNORECASE)
         self.movie_pattern = re.compile("(?:" + movie_indicators + ")(.*)\.(?:" + extensions + ")$", re.IGNORECASE)
         self.fileMoved = False
 
