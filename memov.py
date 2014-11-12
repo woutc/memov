@@ -104,12 +104,14 @@ class Memov:
         if get_config('XBMC_HOST') == '':
             return
         print "Updating XBMC library"
-        url = 'http://' + get_config('XBMC_HOST')
+        url = 'http://' + get_config('XBMC_HOST') + "/jsonrpc"
         payload = {'jsonrpc':'2.0','method':'VideoLibrary.Scan'}
         request = urllib2.Request(url, json.dumps(payload), {'Content-Type': 'application/json'})
         stream = urllib2.urlopen(request)
-        stream.read()
+        result = stream.read()
         stream.close()
+        if result:
+            print "Error updating library"
 
 if __name__ == '__main__':
     download_dir = get_config('DOWNLOAD_DIR', True)
