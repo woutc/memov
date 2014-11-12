@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import os
+import sys
 import re
 import string
 import shutil
@@ -9,11 +10,21 @@ import urllib2
 import config
 import json
 
+def get_config(variable, isCritical=False):
+    if hasattr(config, variable):
+        return getattr(config, variable)
+    else:
+        print "Missing config option: " + variable
+        if not isCritical:
+            return ""
+        else:
+            sys.exit(1)
 
 class Memov:
     def __init__(self):
-        extensions = self._createConfigList(config.EXTENSIONS)
-        movie_indicators = self._createConfigList(config.MOVIE_INDICATORS)
+        extensions = self._createConfigList(get_config('EXTENSIONS', True))
+        movie_indicators = self._createConfigList(get_config('MOVIE_INDICATORS', True))
+        ignore_files = self._createConfigList(get_config('IGNORE_FILES'))
         self.tv_pattern = re.compile("([-._ \w]+)[-._ ]S(\d{1,2}).?Ep?(\d{1,2})([^\/]*\.(?:" + extensions + ")$)", re.IGNORECASE)
         self.movie_pattern = re.compile("(?:" + movie_indicators + ")(.*)\.(?:" + extensions + ")$", re.IGNORECASE)
         self.fileMoved = False
@@ -47,18 +58,18 @@ class Memov:
         if tv_show_match:
             tv_show_title = list(tv_show_match.groups())
             tv_show_title = self.cleanUpTvShowFilename(tv_show_title)
-            tv_show_dir = self.extractTvShowDir(tv_show_title) 
-            tv_show_title = self.transformTvShowFilename(tv_show_title)    
+            tv_show_dir = self.extractTvShowDir(tv_show_title)
+            tv_show_title = self.transformTvShowFilename(tv_show_title)
             self.moveTvShow(orig_file, tv_show_dir, tv_show_title)
         elif self.isMovie(file_name):
-            full_path = os.path.join(config.MOVIE_DIR, file_name)
+            full_path = os.path.join(get_config('MOVIE_DIR', True), file_name)
             self.moveFile(orig_file, full_path)
-            
+
     def moveTvShow(self, orig_file, tv_show_dir, tv_show_title):
-        directory = os.path.join(config.TV_SHOW_DIR, tv_show_dir[0], tv_show_dir[1])
+        directory = os.path.join(get_config('TV_SHOW_DIR', True), tv_show_dir[0], tv_show_dir[1])
         self.createTvShowDir(directory)
         self.moveFile(orig_file, os.path.join(directory, tv_show_title))
-        
+
     def moveFile(self, orig_file, new_file):
         print "Moving file: " + orig_file + " to " + new_file
         shutil.move(orig_file, new_file)
@@ -67,9 +78,9 @@ class Memov:
     def createTvShowDir(self, tv_show_dir):
         try:
             os.makedirs(tv_show_dir)
-        except OSError, e: 
-            if e.errno != errno.EEXIST: 
-                raise      
+        except OSError, e:
+            if e.errno != errno.EEXIST:
+                raise
 
     def run(self, downloaddir):
         self.walkdir(downloaddir)
@@ -88,12 +99,12 @@ class Memov:
         for item in list_:
             result += item + "|"
         return result.rstrip("|")
-        
+
     def updateLibrary(self):
-        if config.XBMC_HOST == '':
+        if get_config('XBMC_HOST') == '':
             return
         print "Updating XBMC library"
-        url = 'http://' + config.XBMC_HOST
+        url = 'http://' + get_config('XBMC_HOST')
         payload = {'jsonrpc':'2.0','method':'VideoLibrary.Scan'}
         request = urllib2.Request(url, json.dumps(payload), {'Content-Type': 'application/json'})
         stream = urllib2.urlopen(request)
@@ -101,4 +112,5 @@ class Memov:
         stream.close()
 
 if __name__ == '__main__':
-    Memov().run(config.DOWNLOAD_DIR)
+    download_dir = get_config('DOWNLOAD_DIR', True)
+    Memov().run(download_dir)

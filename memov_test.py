@@ -1,5 +1,5 @@
 import unittest
-from memov import Memov
+from memov import Memov, get_config
 import config
 import os
 import shutil
@@ -8,6 +8,8 @@ class MemovMock(Memov):
     def __init__(self):
         config.MOVIE_DIR = "/movies/"
         config.TV_SHOW_DIR = "/shows/"
+        config.EXTENSIONS = ["avi", "mp4", "iso", "mkv", "m4v", "sub", "srt"]
+        config.MOVIE_INDICATORS = ["dvdrip", "dvd-rip", "xvid", "divx", "h264", "x264", "720p", "RARBG"]
         Memov.__init__(self)
         self.orig_file = ""
         self.new_file = ""     
@@ -23,6 +25,8 @@ class MemovFilesActivatedMock(Memov):
     def __init__(self):
         config.MOVIE_DIR = "test/Movies"
         config.TV_SHOW_DIR = "test/Shows"
+        config.EXTENSIONS = ["avi", "mp4", "iso", "mkv", "m4v", "sub", "srt"]
+        config.MOVIE_INDICATORS = ["dvdrip", "dvd-rip", "xvid", "divx", "h264", "x264", "720p", "RARBG"]
         config.XBMC_HOST = ''
         Memov.__init__(self)                   
 
@@ -79,11 +83,31 @@ class MemovTest(unittest.TestCase):
     def testTvShowS00Ep00(self):
         self.memov_mock.move("/Downloads/", "Breaking Bad s02ep7 720p brrip.sujaidr.mkv")
         self.assertEqual(self.memov_mock.new_file, "/shows/Breaking Bad/Breaking Bad - Season 2/Breaking.Bad.S02E07 720p brrip.sujaidr.mkv")
+
+    def testMovieCrappyName(self):
+        self.memov_mock.move("/Downloads/", "RARBG.com.avi")
+        self.assertEqual(self.memov_mock.new_file, "/movies/RARBG.com.avi")
                 
     def testConfigList(self):
         config = ["a", "b", "c"]
         result = self.memov_mock._createConfigList(config)
-        self.assertEqual(result, "a|b|c")    
+        self.assertEqual(result, "a|b|c")
+
+    def testMisingCriticalConfig(self):
+        if hasattr(config, "DOWNLOAD_DIR"):
+            del config.DOWNLOAD_DIR
+        with self.assertRaises(SystemExit) as cm:
+            get_config("DOWNLOAD_DIR", True)
+        self.assertEqual(cm.exception.code, 1)
+
+    def testMisingNonCriticalConfig(self):
+        if hasattr(config, "DOWNLOAD_DIR"):
+            del config.DOWNLOAD_DIR
+
+        try:
+            get_config("DOWNLOAD_DIR")
+        except:
+            self.fail("No exception should be thrown")
         
     def testFileAndDirectoryHandling(self):
         os.makedirs('test/Download')
